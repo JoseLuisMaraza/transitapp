@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TransitApp — Paga tu pasaje sin efectivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #050505;
+  --bg2:     #0a0a0a;
+  --bg3:     #111;
+  --bg4:     #161616;
+  --border:  #1c1c1c;
+  --border2: #242424;
+  --text:    #f0f0f0;
+  --muted:   #4a4a4a;
+  --muted2:  #333;
+  --white:   #fff;
+  --mint:    #a8edcb;
+  --sky:     #a8d8f0;
+  --lavender:#c5b8f0;
+  --cream:   #f0e8d0;
+  --orange:  #f0a860;
+  --mint-t:  rgba(168,237,203,.06);
+  --sky-t:   rgba(168,216,240,.06);
+  --lav-t:   rgba(197,184,240,.06);
+}
+/* Light theme overrides */
+body.light {
+  --bg:      #f4f4ef;
+  --bg2:     #eceae4;
+  --bg3:     #e3e1da;
+  --bg4:     #d8d6ce;
+  --border:  #cac8c0;
+  --border2: #b8b6ae;
+  --text:    #1a1a1a;
+  --muted:   #6a6a62;
+  --muted2:  #999;
+  --white:   #0d0d0d;
+  --mint:    #1a8c52;
+  --sky:     #1a6a9a;
+  --lavender:#5c4ab0;
+  --cream:   #8a6a20;
+  --orange:  #c06010;
+  --mint-t:  rgba(20,120,70,.1);
+  --sky-t:   rgba(30,100,160,.09);
+  --lav-t:   rgba(90,70,180,.09);
+}
+
+/* Noise overlay más sutil en claro */
+body.light::before{opacity:.25}
+
+/* Grid */
+body.light .hero-grid{opacity:.1;filter:invert(1)}
+
+/* Orbs */
+body.light .o1{background:radial-gradient(circle,rgba(20,140,80,.07) 0%,transparent 70%)}
+body.light .o2{background:radial-gradient(circle,rgba(30,110,170,.06) 0%,transparent 70%)}
+
+/* Nav */
+body.light nav.scrolled{background:rgba(244,244,239,.92);border-color:var(--border)}
+body.light .logo-txt{color:var(--white)}
+body.light .nav-dl{color:var(--mint);border-color:rgba(20,140,80,.35);background:rgba(20,140,80,.08)}
+body.light .nav-dl:hover{background:rgba(20,140,80,.15);border-color:var(--mint)}
+
+/* Hero chip */
+body.light .hero-chip{color:var(--mint);border-color:rgba(20,140,80,.3);background:rgba(20,140,80,.07)}
+body.light .chip-blink{background:var(--mint);box-shadow:0 0 8px var(--mint)}
+
+/* Botones hero */
+body.light .btn-main{box-shadow:0 14px 40px rgba(20,140,80,.18)}
+body.light .btn-ghost{color:var(--muted);border-color:var(--border2)}
+body.light .btn-ghost:hover{color:var(--sky);border-color:var(--sky)}
+
+/* Marquee */
+body.light .mq{background:var(--bg3);border-color:var(--border)}
+body.light .mq-i{color:var(--muted)}
+body.light .mq-d{color:var(--mint)}
+
+/* Section tags */
+body.light .sec-tag{color:var(--mint)}
+
+/* Feature cards */
+body.light .feat-grid{background:var(--border);border-color:var(--border)}
+body.light .fc{background:var(--bg2)}
+body.light .fc:hover{background:var(--bg3)}
+body.light .fc-icon{background:rgba(20,140,80,.09);border-color:rgba(20,140,80,.2)}
+body.light .fc-title{color:var(--white)}
+body.light .fc-desc{color:var(--muted)}
+
+/* QR section */
+body.light .qr-box{background:var(--bg3);border-color:var(--border2);box-shadow:0 40px 80px rgba(0,0,0,.15)}
+body.light .check-txt{color:var(--muted)}
+
+/* Tarifas */
+body.light #tarifas{background:var(--bg2)}
+body.light #tarifas::before{background:linear-gradient(90deg,transparent,var(--sky),transparent)}
+body.light .tc{background:var(--bg3);border-color:var(--border)}
+body.light .tc-tag{color:var(--muted)}
+
+/* Steps */
+body.light .steps-grid::before{background:linear-gradient(90deg,transparent,var(--border),var(--mint),var(--border),transparent)}
+body.light .step-n{background:var(--bg3);border-color:var(--border2)}
+body.light .step-title{color:var(--white)}
+body.light .step-desc{color:var(--muted)}
+
+/* Screen cards */
+body.light .screen-phone{background:#d8d6cf;border-color:#c0beb6;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+body.light .screen-label{color:var(--muted)}
+body.light .screen-num{color:var(--muted2)}
+
+/* Download section */
+body.light #dl{background:var(--bg2)}
+body.light #dl::before{background:linear-gradient(90deg,transparent,var(--mint),transparent)}
+body.light .dl-glow{background:radial-gradient(ellipse,rgba(20,140,80,.06) 0%,transparent 70%)}
+body.light .dl-p{color:var(--muted)}
+body.light .dl-meta{color:var(--muted)}
+body.light .dl-meta a{color:var(--sky)}
+body.light .stats-bar{border-color:var(--border)}
+body.light .stat-l{color:var(--muted)}
+
+/* Footer */
+body.light footer{border-color:var(--border)}
+body.light .f-copy{color:var(--muted)}
+body.light .f-links a{color:var(--muted)}
+body.light .f-links a:hover{color:var(--mint)}
+
+/* Phone mockup */
+body.light .phone-body{
+  background:linear-gradient(160deg,#2a2a2a 0%,#1a1a1a 60%,#222 100%);
+  border-color:#3a3a3a;
+  box-shadow:0 0 0 1px #1a1a1a,0 60px 140px rgba(0,0,0,.35),0 0 80px rgba(20,140,80,.08),inset 0 1px 0 rgba(255,255,255,.06),inset 0 -1px 0 rgba(0,0,0,.5);
+}
+/* El teléfono mantiene pantalla oscura siempre — queda bien sobre fondo claro */
+
+/* Authors modal en claro */
+body.light .authors-modal{box-shadow:0 40px 100px rgba(0,0,0,.2)}
+body.light .authors-close{background:var(--bg4);border-color:var(--border)}
+body.light .author-card{background:var(--bg3);border-color:var(--border)}
+body.light .author-name{color:var(--white)}
+body.light .author-role{color:var(--muted)}
+body.light .authors-footer{border-color:var(--border);color:var(--muted)}
+
+/* ── Floating action buttons ── */
+.fab-group{
+  position:fixed;
+  bottom:28px;right:28px;
+  z-index:500;
+  display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+}
+.fab{
+  width:48px;height:48px;border-radius:50%;
+  border:1px solid rgba(168,237,203,.3);
+  background:rgba(10,10,10,.85);
+  backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:transform .25s,border-color .25s,box-shadow .25s,background .25s;
+  position:relative;
+}
+.fab:hover{transform:scale(1.12);border-color:var(--mint);box-shadow:0 0 20px rgba(168,237,203,.2)}
+.fab-tip{
+  position:absolute;right:calc(100% + 10px);
+  white-space:nowrap;
+  font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1.5px;
+  color:var(--mint);background:rgba(10,10,10,.9);
+  border:1px solid rgba(168,237,203,.2);backdrop-filter:blur(10px);
+  padding:5px 12px;border-radius:4px;
+  opacity:0;pointer-events:none;transform:translateX(6px);
+  transition:opacity .2s,transform .2s;
+}
+.fab:hover .fab-tip{opacity:1;transform:translateX(0)}
+body.light .fab{background:rgba(240,240,235,.9);border-color:rgba(30,120,70,.3)}
+body.light .fab:hover{border-color:var(--mint)}
+body.light .fab-tip{background:rgba(240,240,235,.95);color:#1a7a45}
+
+/* ── Authors modal ── */
+.authors-overlay{
+  position:fixed;inset:0;z-index:800;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.authors-overlay.open{opacity:1;pointer-events:all}
+.authors-modal{
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:20px;padding:36px 36px 28px;max-width:560px;width:92%;
+  max-height:88vh;overflow:hidden;
+  display:flex;flex-direction:column;
+  position:relative;
+  transform:translateY(20px) scale(.97);
+  transition:transform .3s;
+  box-shadow:0 40px 100px rgba(0,0,0,.6);
+}
+.authors-scroll{overflow-y:auto;flex:1;padding-right:4px;margin-right:-4px}
+.authors-scroll::-webkit-scrollbar{width:3px}
+.authors-scroll::-webkit-scrollbar-track{background:transparent}
+.authors-scroll::-webkit-scrollbar-thumb{background:rgba(168,237,203,.25);border-radius:3px}
+.author-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.author-chip{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:.8px;padding:3px 8px;border-radius:100px;background:rgba(168,237,203,.07);border:1px solid rgba(168,237,203,.18);color:var(--mint)}
+body.light .author-chip{background:rgba(20,140,80,.08);border-color:rgba(20,140,80,.25);color:var(--mint)}
+.authors-overlay.open .authors-modal{transform:translateY(0) scale(1)}
+.authors-modal::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--mint),transparent);
+  border-radius:20px 20px 0 0;
+}
+.authors-close{
+  position:absolute;top:16px;right:16px;
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg3);border:1px solid var(--border);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:16px;
+  transition:background .2s,color .2s;
+}
+.authors-close:hover{background:var(--bg4);color:var(--text)}
+.authors-tag{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:3px;color:var(--mint);margin-bottom:10px}
+.authors-title{font-size:26px;font-weight:900;letter-spacing:-1px;margin-bottom:28px;color:var(--white)}
+.authors-list{display:flex;flex-direction:column;gap:14px}
+.author-card{
+  display:flex;align-items:center;gap:16px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;padding:16px 18px;
+  transition:border-color .2s,transform .2s;
+}
+.author-card:hover{border-color:rgba(168,237,203,.3);transform:translateX(4px)}
+.author-avatar{
+  width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;color:#050505;
+}
+.author-info{flex:1;min-width:0}
+.author-name{font-size:15px;font-weight:700;color:var(--white);letter-spacing:-.3px}
+.author-role{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--muted);margin-top:3px}
+.author-course{font-family:'Space Mono',monospace;font-size:7.5px;color:var(--mint);margin-top:5px;opacity:.7}
+.authors-footer{margin-top:24px;padding-top:20px;border-top:1px solid var(--border);text-align:center;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--muted)}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;overflow-x:hidden;cursor:none}
+body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.45;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")}
+
+/* Cursor */
+#cur{width:8px;height:8px;border-radius:50%;background:var(--mint);position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:screen}
+#cur-ring{width:32px;height:32px;border-radius:50%;border:1px solid rgba(168,237,203,.35);position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:width .2s,height .2s,border-color .2s}
+body:has(a:hover) #cur-ring,body:has(button:hover) #cur-ring{width:52px;height:52px;border-color:var(--mint);margin-left:-10px;margin-top:-10px}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:22px 48px;transition:background .4s,border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(5,5,5,.88);border-color:var(--border);backdrop-filter:blur(20px)}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
+.logo-icon{width:32px;height:32px;border-radius:8px;background:var(--mint-t);border:1px solid rgba(168,237,203,.3);display:flex;align-items:center;justify-content:center}
+.logo-txt{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;font-weight:700;color:var(--white)}
+.nav-dl{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;font-weight:700;padding:11px 26px;border-radius:4px;border:1px solid rgba(168,237,203,.3);color:var(--mint);background:var(--mint-t);text-decoration:none;cursor:none;transition:background .2s,border-color .2s,transform .15s;display:flex;align-items:center;gap:8px}
+.nav-dl:hover{background:rgba(168,237,203,.12);border-color:var(--mint);transform:translateY(-1px)}
+
+/* Hero */
+#hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:80px;padding:130px 80px 80px;position:relative;overflow:hidden;max-width:1400px;margin:0 auto}
+.hero-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:64px 64px;opacity:.25;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 20%,transparent 100%);animation:gridmove 25s linear infinite;pointer-events:none}
+@keyframes gridmove{0%{transform:translate(0,0)}100%{transform:translate(64px,64px)}}
+.orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
+.o1{width:500px;height:500px;background:radial-gradient(circle,rgba(168,237,203,.08) 0%,transparent 70%);top:-180px;right:-120px;animation:of1 9s ease-in-out infinite}
+.o2{width:400px;height:400px;background:radial-gradient(circle,rgba(168,216,240,.06) 0%,transparent 70%);bottom:-120px;left:-80px;animation:of1 12s ease-in-out infinite reverse}
+@keyframes of1{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,30px)}}
+
+.hero-left{position:relative;z-index:2}
+.hero-chip{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2.5px;color:var(--mint);border:1px solid rgba(168,237,203,.25);background:rgba(168,237,203,.05);padding:8px 20px;border-radius:100px;margin-bottom:36px;animation:fadeup .8s ease both}
+.chip-blink{width:5px;height:5px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint);animation:blink 1.8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-h1{font-size:clamp(48px,6vw,88px);font-weight:900;line-height:.92;letter-spacing:-3px;margin-bottom:28px;animation:fadeup .8s ease .1s both}
+.hero-h1 em{font-style:normal;color:var(--mint)}
+.hero-h1 .sky-w{color:var(--sky)}
+.hero-p{font-size:17px;font-weight:300;color:var(--muted);line-height:1.7;max-width:440px;margin-bottom:48px;animation:fadeup .8s ease .2s both}
+.hero-btns{display:flex;align-items:center;gap:14px;flex-wrap:wrap;animation:fadeup .8s ease .3s both}
+.btn-main{display:inline-flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;font-weight:700;padding:15px 34px;border-radius:6px;cursor:none;text-decoration:none;border:none;background:linear-gradient(135deg,var(--mint),var(--sky));color:#050505;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.btn-main::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.2),transparent);transform:translateX(-100%);transition:transform .4s}
+.btn-main:hover::before{transform:translateX(100%)}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(168,237,203,.22)}
+.btn-ghost{display:inline-flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;padding:14px 32px;border-radius:6px;cursor:none;text-decoration:none;border:1px solid var(--border2);color:var(--muted);transition:border-color .25s,color .25s,transform .25s}
+.btn-ghost:hover{border-color:var(--sky);color:var(--sky);transform:translateY(-2px)}
+@keyframes fadeup{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── 3D Phone ── */
+.hero-right{position:relative;z-index:2;display:flex;justify-content:center;align-items:center;animation:phonein 1.2s cubic-bezier(.16,1,.3,1) .4s both}
+@keyframes phonein{from{opacity:0;transform:translateY(60px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.phone-scene{perspective:1200px;width:260px}
+.phone-3d{
+  width:100%;
+  transform-style:preserve-3d;
+  transform:rotateY(-18deg) rotateX(6deg);
+  animation:phone3d 8s ease-in-out infinite;
+}
+@keyframes phone3d{
+  0%,100%{transform:rotateY(-18deg) rotateX(6deg) translateY(0)}
+  50%{transform:rotateY(-22deg) rotateX(8deg) translateY(-16px)}
+}
+
+.phone-body{
+  width:260px;
+  background:linear-gradient(160deg,#1a1a1a 0%,#0d0d0d 60%,#111 100%);
+  border-radius:46px;
+  padding:12px;
+  border:1px solid #2a2a2a;
+  box-shadow:
+    0 0 0 1px #050505,
+    0 60px 140px rgba(0,0,0,.9),
+    0 0 80px rgba(168,237,203,.07),
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(0,0,0,.5);
+  position:relative;
+}
+/* Side buttons */
+.phone-body::before{
+  content:'';position:absolute;right:-3px;top:80px;width:3px;height:40px;
+  background:linear-gradient(180deg,#1e1e1e,#2a2a2a,#1e1e1e);
+  border-radius:0 2px 2px 0;box-shadow:1px 0 4px rgba(0,0,0,.5);
+}
+.phone-body::after{
+  content:'';position:absolute;left:-3px;top:70px;width:3px;height:30px;
+  background:linear-gradient(180deg,#1e1e1e,#2a2a2a,#1e1e1e);
+  border-radius:2px 0 0 2px;box-shadow:-1px 0 4px rgba(0,0,0,.5);
+}
+
+.phone-notch{
+  width:90px;height:28px;background:linear-gradient(180deg,#000,#0a0a0a);
+  border-radius:20px;margin:0 auto 6px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.8);
+}
+.nc{width:7px;height:7px;border-radius:50%;background:#111}
+.nc.cam{background:radial-gradient(circle,#1a1a2e,#111);border:1px solid #1a1a2e}
+.nm{width:22px;height:4px;border-radius:2px;background:#0d0d0d}
+
+.pscreen{
+  background:#000;border-radius:36px;overflow:hidden;
+  height:480px;position:relative;
+  box-shadow:inset 0 0 30px rgba(0,0,0,.8);
+}
+
+/* Phone screen reflection */
+.pscreen::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:40%;
+  background:linear-gradient(180deg,rgba(255,255,255,.03) 0%,transparent 100%);
+  pointer-events:none;z-index:10;border-radius:36px 36px 0 0;
+}
+
+/* Side sheen */
+.phone-sheen{
+  position:absolute;top:0;bottom:0;right:0;width:30%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.025));
+  border-radius:0 46px 46px 0;pointer-events:none;
+}
+
+/* Screen content — dashboard */
+.sc{padding:20px 16px;height:100%;display:flex;flex-direction:column;gap:12px;overflow:hidden;background:linear-gradient(180deg,#080808,#050505)}
+.sc-status{display:flex;justify-content:space-between;align-items:center;font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1px;color:#333}
+.sc-top{display:flex;justify-content:space-between;align-items:center}
+.sc-greeting{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1.5px;color:#444}
+.sc-name{font-size:14px;font-weight:700;color:#f0f0f0;letter-spacing:-.3px}
+.sc-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--mint),var(--sky));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#050505}
+.sc-badge{display:inline-block;font-family:'Space Mono',monospace;font-size:6px;letter-spacing:1px;padding:2px 7px;border-radius:10px;background:rgba(168,237,203,.1);border:1px solid rgba(168,237,203,.25);color:var(--mint);margin-top:2px}
+.sc-bal{background:#0e0e0e;border:1px solid #1a1a1a;border-radius:14px;padding:14px}
+.sc-bal-l{font-family:'Space Mono',monospace;font-size:6px;letter-spacing:2px;color:#333;margin-bottom:4px}
+.sc-bal-n{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--mint);letter-spacing:-1px}
+
+/* Quick actions row */
+.sc-actions{display:flex;gap:7px}
+.sc-btn{flex:1;background:#0e0e0e;border:1px solid #1a1a1a;border-radius:10px;padding:9px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.sc-btn-i{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.sc-btn-l{font-family:'Space Mono',monospace;font-size:5.5px;letter-spacing:.8px;color:#444;text-align:center}
+
+/* Map preview */
+.sc-map{background:#0a0a0f;border:1px solid #1a1a1a;border-radius:12px;height:70px;position:relative;overflow:hidden}
+.sc-map-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(168,237,203,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(168,237,203,.04) 1px,transparent 1px);background-size:12px 12px}
+.sc-map-dot{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--mint);left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(168,237,203,.6)}
+.sc-map-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(168,237,203,.3);animation:mapring 2s ease-in-out infinite}
+@keyframes mapring{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.4);opacity:0}}
+.sc-map-label{position:absolute;bottom:6px;left:8px;font-family:'Space Mono',monospace;font-size:6px;letter-spacing:1px;color:rgba(168,237,203,.5)}
+
+/* Pay button */
+.sc-pay{background:linear-gradient(135deg,rgba(168,237,203,.12),rgba(168,216,240,.08));border:1px solid rgba(168,237,203,.2);border-radius:11px;padding:11px 14px;display:flex;align-items:center;gap:10px}
+.sc-pay-i{width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-pay-t{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1.5px;color:var(--mint);font-weight:700}
+.sc-pay-sub{font-family:'Space Mono',monospace;font-size:5.5px;color:#444;margin-top:2px;letter-spacing:.5px}
+
+/* Phone glow */
+.phone-glow{position:absolute;width:300px;height:400px;border-radius:50%;background:radial-gradient(ellipse,rgba(168,237,203,.12) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);z-index:-1;animation:pglow 4s ease-in-out infinite}
+@keyframes pglow{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+
+/* Marquee */
+.mq{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;overflow:hidden;background:var(--bg2)}
+.mq-t{display:flex;gap:44px;animation:mq 22s linear infinite;white-space:nowrap}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mq-i{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.mq-d{color:var(--mint);font-size:8px}
+
+/* Features */
+#features{padding:120px 48px;max-width:1200px;margin:0 auto}
+.sec-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--mint);margin-bottom:14px}
+.sec-h{font-size:clamp(32px,5vw,58px);font-weight:900;line-height:.95;letter-spacing:-2px;margin-bottom:14px}
+.sec-p{font-size:16px;color:var(--muted);font-weight:300;line-height:1.65;max-width:460px}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1px;margin-top:64px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.fc{background:var(--bg2);padding:38px 30px;transition:background .3s;position:relative;overflow:hidden}
+.fc::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--mint),transparent);opacity:0;transition:opacity .3s}
+.fc:hover{background:var(--bg3)}
+.fc:hover::after{opacity:1}
+.fc-icon{width:44px;height:44px;border-radius:10px;background:var(--mint-t);border:1px solid rgba(168,237,203,.15);display:flex;align-items:center;justify-content:center;margin-bottom:18px;transition:transform .3s,background .3s}
+.fc:hover .fc-icon{transform:scale(1.1) rotate(-5deg);background:rgba(168,237,203,.1)}
+.fc-title{font-size:17px;font-weight:700;margin-bottom:9px;letter-spacing:-.4px;color:var(--white)}
+.fc-desc{font-size:13px;color:var(--muted);font-weight:300;line-height:1.75}
+
+/* QR split */
+.qr-split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto;padding:100px 48px}
+.qr-box{width:240px;height:240px;margin:0 auto;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 40px 80px rgba(0,0,0,.6)}
+.qr-box::before{content:'';position:absolute;inset:-1px;border-radius:21px;z-index:-1;background:linear-gradient(135deg,rgba(168,237,203,.25),transparent,transparent,rgba(168,216,240,.25))}
+.qr-scan{position:absolute;left:20px;right:20px;height:1.5px;background:linear-gradient(90deg,transparent,var(--mint),transparent);box-shadow:0 0 10px var(--mint);animation:scan 2.5s ease-in-out infinite}
+@keyframes scan{0%{top:20px;opacity:1}50%{top:calc(100% - 20px);opacity:1}100%{top:20px;opacity:1}}
+.qr-c{position:absolute;width:22px;height:22px;border-color:var(--mint);border-style:solid;border-width:0}
+.qr-c.tl{top:10px;left:10px;border-top-width:2px;border-left-width:2px;border-radius:3px 0 0 0}
+.qr-c.tr{top:10px;right:10px;border-top-width:2px;border-right-width:2px;border-radius:0 3px 0 0}
+.qr-c.bl{bottom:10px;left:10px;border-bottom-width:2px;border-left-width:2px;border-radius:0 0 0 3px}
+.qr-c.br{bottom:10px;right:10px;border-bottom-width:2px;border-right-width:2px;border-radius:0 0 3px 0}
+.check-list{display:flex;flex-direction:column;gap:12px;margin-top:28px}
+.check-i{display:flex;align-items:center;gap:12px}
+.check-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);flex-shrink:0}
+.check-txt{font-size:14px;color:#888;font-weight:300}
+
+/* Tarifas */
+#tarifas{padding:120px 48px;background:var(--bg2);position:relative;overflow:hidden}
+#tarifas::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--sky),transparent)}
+.tar-inner{max-width:1200px;margin:0 auto}
+.tar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:56px}
+.tc{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:30px 22px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s}
+.tc:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.tc.t-mint:hover{border-color:var(--mint);box-shadow:0 24px 60px rgba(168,237,203,.08)}
+.tc.t-sky:hover{border-color:var(--sky);box-shadow:0 24px 60px rgba(168,216,240,.08)}
+.tc.t-lav:hover{border-color:var(--lavender);box-shadow:0 24px 60px rgba(197,184,240,.08)}
+.tc.t-cream:hover{border-color:var(--cream);box-shadow:0 24px 60px rgba(240,232,208,.08)}
+.tc-icon{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.tc-tag{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-bottom:10px}
+.tc-price{font-size:34px;font-weight:900;letter-spacing:-2px;margin-bottom:4px}
+.tc-desc{font-size:13px;color:var(--muted);font-weight:300;line-height:1.6;margin-top:10px}
+.tc-badge{display:inline-block;margin-top:14px;padding:4px 12px;border-radius:100px;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px}
+
+/* ── COMO USAR — pantallas reales ── */
+#como{padding:120px 48px;max-width:1400px;margin:0 auto}
+.screens-intro{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;margin-bottom:80px}
+
+.screens-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:0}
+
+.screen-card{text-align:center;cursor:pointer}
+.screen-phone{
+  width:100%;max-width:160px;margin:0 auto;
+  background:#0d0d0d;border-radius:28px;padding:7px;
+  border:1px solid #222;
+  box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 30px rgba(168,237,203,.03);
+  transition:transform .4s,box-shadow .4s;
+  position:relative;
+}
+.screen-card:hover .screen-phone{
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 30px 80px rgba(0,0,0,.8),0 0 40px rgba(168,237,203,.06);
+}
+.screen-notch-sm{width:50px;height:16px;background:#000;border-radius:12px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center}
+.screen-inner{background:#070707;border-radius:20px;overflow:hidden;height:270px;position:relative}
+.screen-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--muted);margin-top:14px}
+.screen-num{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1px;color:var(--muted2);margin-top:4px}
+
+/* Mock screens — filled with colors matching the real screenshots */
+.mock-home{background:linear-gradient(180deg,#050505 0%,#080808 100%);height:100%;padding:14px 10px;display:flex;flex-direction:column;gap:8px}
+.mock-row{display:flex;justify-content:space-between;align-items:center}
+.mock-bal-box{background:#0e0e0e;border:1px solid #1a1a1a;border-radius:10px;padding:10px;flex:1}
+.mock-bal-s{font-family:'Space Mono',monospace;font-size:5px;color:#333;letter-spacing:1px}
+.mock-bal-v{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--mint);margin-top:2px}
+.mock-av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--mint),var(--sky));font-size:9px;font-weight:700;color:#000;display:flex;align-items:center;justify-content:center}
+.mock-map{background:#070710;border:1px solid #1a1a1a;border-radius:8px;height:80px;position:relative;overflow:hidden}
+.mock-map-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(168,237,203,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(168,237,203,.05) 1px,transparent 1px);background-size:10px 10px}
+.mock-dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--mint);left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 8px rgba(168,237,203,.7)}
+.mock-actions{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.mock-act{background:#0e0e0e;border:1px solid #1a1a1a;border-radius:6px;padding:5px 4px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.mock-act-i{width:12px;height:12px;border-radius:3px;background:#1a1a1a}
+.mock-act-l{font-family:'Space Mono',monospace;font-size:4px;color:#333;letter-spacing:.3px}
+
+.mock-qr{background:linear-gradient(180deg,#050505,#080808);height:100%;padding:14px 10px;display:flex;flex-direction:column;gap:8px;align-items:center}
+.mock-qr-title{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:2px;color:var(--white);margin-top:4px}
+.mock-qr-sub{font-family:'Space Mono',monospace;font-size:5px;color:#444;text-align:center}
+.mock-qr-box{background:#fff;border-radius:8px;padding:8px;margin:4px 0}
+.mock-qr-inner{display:grid;grid-template-columns:repeat(7,1fr);gap:1.5px}
+.mock-qr-cell{background:#000;border-radius:.5px;aspect-ratio:1}
+.mock-qr-cell.w{background:#fff}
+.mock-name-badge{background:rgba(168,237,203,.1);border:1px solid rgba(168,237,203,.3);border-radius:10px;padding:3px 8px;font-family:'Space Mono',monospace;font-size:5px;color:var(--mint);letter-spacing:1px}
+
+.mock-panel{background:linear-gradient(180deg,#050505,#080808);height:100%;padding:10px;display:flex;flex-direction:column;gap:6px}
+.mock-status{background:#0d1a0d;border:1px solid #1a2a1a;border-radius:8px;padding:8px;display:flex;align-items:center;justify-content:space-between}
+.mock-status-dot{width:6px;height:6px;border-radius:50%;background:var(--mint)}
+.mock-status-t{font-family:'Space Mono',monospace;font-size:5px;color:var(--mint);letter-spacing:1px}
+.mock-toggle{width:18px;height:10px;background:var(--mint);border-radius:5px;position:relative}
+.mock-toggle::after{content:'';position:absolute;width:8px;height:8px;border-radius:50%;background:#000;right:1px;top:1px}
+.mock-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.mock-stat{background:#0e0e0e;border:1px solid #1a1a1a;border-radius:6px;padding:5px;text-align:center}
+.mock-stat-v{font-family:'Space Mono',monospace;font-size:8px;font-weight:700;color:var(--orange)}
+.mock-stat-l{font-family:'Space Mono',monospace;font-size:4px;color:#333;margin-top:1px}
+.mock-scan{background:linear-gradient(135deg,rgba(168,237,203,.15),rgba(168,216,240,.1));border:1px solid rgba(168,237,203,.25);border-radius:8px;padding:8px;display:flex;align-items:center;gap:6px}
+.mock-scan-t{font-family:'Space Mono',monospace;font-size:5.5px;color:var(--mint);font-weight:700;letter-spacing:1px}
+
+.mock-map-full{background:#050508;height:100%;position:relative;overflow:hidden}
+.mock-map-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(168,237,203,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(168,237,203,.04) 1px,transparent 1px);background-size:14px 14px}
+.mock-bus{position:absolute;width:22px;height:22px;border-radius:50%;background:var(--orange);left:50%;top:45%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(240,168,96,.5)}
+.mock-user{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--sky);left:30%;top:60%;transform:translate(-50%,-50%);box-shadow:0 0 8px rgba(168,216,240,.5)}
+.mock-route-line{position:absolute;left:35%;top:47%;width:18%;height:1.5px;background:var(--orange);opacity:.6;transform:rotate(-15deg)}
+.mock-map-info{position:absolute;bottom:0;left:0;right:0;background:rgba(5,5,5,.9);padding:6px 8px;border-top:1px solid #1a1a1a}
+.mock-map-txt{font-family:'Space Mono',monospace;font-size:5px;color:var(--orange);letter-spacing:.5px}
+
+/* Steps */
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:36px;margin-top:64px;position:relative}
+.steps-grid::before{content:'';position:absolute;top:32px;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,var(--border),var(--mint),var(--border),transparent)}
+.step{text-align:center}
+.step-n{width:64px;height:64px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Space Mono',monospace;font-size:20px;font-weight:700;position:relative;transition:all .3s}
+.step-n::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid transparent;transition:border-color .3s}
+.step:nth-child(1) .step-n{color:var(--mint)}
+.step:nth-child(2) .step-n{color:var(--sky)}
+.step:nth-child(3) .step-n{color:var(--lavender)}
+.step:nth-child(4) .step-n{color:var(--cream)}
+.step:nth-child(1):hover .step-n{background:var(--mint-t);border-color:var(--mint);box-shadow:0 0 28px rgba(168,237,203,.15)}
+.step:nth-child(2):hover .step-n{background:var(--sky-t);border-color:var(--sky)}
+.step:nth-child(3):hover .step-n{background:var(--lav-t);border-color:var(--lavender)}
+.step:nth-child(4):hover .step-n{border-color:var(--cream)}
+.step-title{font-size:17px;font-weight:700;margin-bottom:8px;color:var(--white)}
+.step-desc{font-size:14px;color:var(--muted);font-weight:300;line-height:1.65}
+
+/* Download */
+#dl{padding:120px 48px;text-align:center;position:relative;overflow:hidden;background:var(--bg2)}
+#dl::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--mint),transparent)}
+.dl-glow{position:absolute;width:700px;height:400px;border-radius:50%;background:radial-gradient(ellipse,rgba(168,237,203,.05) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.dl-inner{position:relative;z-index:1;max-width:600px;margin:0 auto}
+.dl-h{font-size:clamp(42px,7vw,80px);font-weight:900;letter-spacing:-3px;line-height:.95;margin-bottom:24px}
+.dl-h em{font-style:normal;color:var(--mint)}
+.dl-p{font-size:17px;color:var(--muted);font-weight:300;line-height:1.6;margin-bottom:48px}
+.dl-btn{display:inline-flex;align-items:center;gap:14px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;font-weight:700;padding:20px 52px;border-radius:8px;cursor:none;text-decoration:none;background:linear-gradient(135deg,var(--mint),var(--sky));color:#050505;box-shadow:0 0 40px rgba(168,237,203,.18);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.dl-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent,rgba(255,255,255,.2),transparent);transform:translateX(-100%);transition:transform .5s}
+.dl-btn:hover::before{transform:translateX(100%)}
+.dl-btn:hover{transform:translateY(-3px);box-shadow:0 20px 60px rgba(168,237,203,.25)}
+.dl-meta{margin-top:22px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted)}
+.dl-meta a{color:var(--sky);text-decoration:none}
+.stats-bar{display:flex;justify-content:center;flex-wrap:wrap;gap:48px;margin-top:64px;padding-top:48px;border-top:1px solid var(--border)}
+.stat-n{font-size:40px;font-weight:900;letter-spacing:-2px;line-height:1}
+.stat-l{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--muted);margin-top:5px}
+
+/* Footer */
+footer{padding:36px 48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.f-copy{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted)}
+.f-links{display:flex;gap:24px}
+.f-links a{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);text-decoration:none;transition:color .2s}
+.f-links a:hover{color:var(--mint)}
+
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease}
+.reveal.on{opacity:1;transform:translateY(0)}
+
+@media(max-width:1024px){
+  #hero{grid-template-columns:1fr;text-align:center;padding:120px 40px 60px;gap:40px}
+  .hero-p{margin:0 auto 48px}
+  .hero-btns{justify-content:center}
+  .screens-intro{grid-template-columns:1fr}
+  .screens-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  #features,.qr-split,#tarifas .tar-inner,#como,#dl{padding:80px 20px}
+  .hero-btns{flex-direction:column;align-items:center}
+  .btn-main,.btn-ghost{width:100%;max-width:320px;justify-content:center}
+  .qr-split{grid-template-columns:1fr;gap:40px}
+  .steps-grid::before{display:none}
+  footer{flex-direction:column;text-align:center}
+  body{cursor:auto}
+  #cur,#cur-ring{display:none}
+  .screens-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div class="hero-grid"></div>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<!-- Nav -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <div class="logo-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 4v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+      </svg>
+    </div>
+    <span class="logo-txt">TRANSITAPP</span>
+  </a>
+  <a href="TransitApp.apk" class="nav-dl" download>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    DESCARGAR APK
+  </a>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-chip">
+      <div class="chip-blink"></div>
+      COCHABAMBA · BOLIVIA · 2025
+    </div>
+    <h1 class="hero-h1">
+      Paga tu<br>
+      pasaje <em>sin</em><br>
+      <span class="sky-w">efectivo</span>
+    </h1>
+    <p class="hero-p">
+      Recarga saldo, escanea el QR del conductor y viaja.
+      Descuentos automáticos para estudiantes, adultos mayores y personas con discapacidad.
+    </p>
+    <div class="hero-btns">
+      <a href="TransitApp.apk" class="btn-main" download>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        DESCARGAR PARA ANDROID
+      </a>
+      <a href="#como" class="btn-ghost">
+        VER CÓMO FUNCIONA
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- 3D Phone -->
+  <div class="hero-right">
+    <div class="phone-scene">
+      <div class="phone-3d">
+        <div class="phone-body">
+          <div class="phone-notch">
+            <div class="nc cam"></div>
+            <div class="nm"></div>
+            <div class="nc"></div>
+          </div>
+          <div class="pscreen">
+            <div class="sc">
+              <div class="sc-status">
+                <span>20:55</span>
+                <span>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.5C5.5 4.5 18.5 4.5 22.5 8.5M5 12c2.5-2.5 12-2.5 14 0M8.5 15.5c1.5-1.5 6.5-1.5 7 0M12 19v.01"/></svg>
+                </span>
+              </div>
+              <div class="sc-top">
+                <div>
+                  <div class="sc-greeting">BUENAS NOCHES</div>
+                  <div class="sc-name">Juan</div>
+                  <div class="sc-badge">ESTUDIANTE</div>
+                </div>
+                <div class="sc-av">J</div>
+              </div>
+              <div class="sc-bal">
+                <div class="sc-bal-l">SALDO DISPONIBLE</div>
+                <div class="sc-bal-n">Bs. 806.25</div>
+              </div>
+              <div class="sc-map">
+                <div class="sc-map-grid"></div>
+                <div class="sc-map-dot"></div>
+                <div class="sc-map-label">VER TRUFIS EN TIEMPO REAL</div>
+              </div>
+              <div class="sc-actions">
+                <div class="sc-btn">
+                  <div class="sc-btn-i">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                  </div>
+                  <div class="sc-btn-l">PAGAR</div>
+                </div>
+                <div class="sc-btn">
+                  <div class="sc-btn-i">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                  </div>
+                  <div class="sc-btn-l">RECARGAR</div>
+                </div>
+                <div class="sc-btn">
+                  <div class="sc-btn-i">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 4v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                  </div>
+                  <div class="sc-btn-l">TRUFIS</div>
+                </div>
+                <div class="sc-btn">
+                  <div class="sc-btn-i">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <div class="sc-btn-l">VIAJES</div>
+                </div>
+                <div class="sc-btn">
+                  <div class="sc-btn-i">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                  </div>
+                  <div class="sc-btn-l">AJUSTES</div>
+                </div>
+              </div>
+              <div class="sc-pay">
+                <div class="sc-pay-i">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
+                <div>
+                  <div class="sc-pay-t">ESCANEAR QR Y PAGAR</div>
+                  <div class="sc-pay-sub">Bs. 1.25 · TARIFA ESTUDIANTE</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-sheen"></div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-glow"></div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="mq">
+  <div class="mq-t">
+    <span class="mq-i">PAGO SIN EFECTIVO <span class="mq-d">◆</span></span>
+    <span class="mq-i">QR DEL CONDUCTOR <span class="mq-d">◆</span></span>
+    <span class="mq-i">ESTUDIANTES 50% OFF <span class="mq-d">◆</span></span>
+    <span class="mq-i">GPS EN TIEMPO REAL <span class="mq-d">◆</span></span>
+    <span class="mq-i">HUELLA DIGITAL <span class="mq-d">◆</span></span>
+    <span class="mq-i">COCHABAMBA BOLIVIA <span class="mq-d">◆</span></span>
+    <span class="mq-i">ADULTOS MAYORES 30% <span class="mq-d">◆</span></span>
+    <span class="mq-i">DISCAPACIDAD GRATIS <span class="mq-d">◆</span></span>
+    <span class="mq-i">PAGO SIN EFECTIVO <span class="mq-d">◆</span></span>
+    <span class="mq-i">QR DEL CONDUCTOR <span class="mq-d">◆</span></span>
+    <span class="mq-i">ESTUDIANTES 50% OFF <span class="mq-d">◆</span></span>
+    <span class="mq-i">GPS EN TIEMPO REAL <span class="mq-d">◆</span></span>
+    <span class="mq-i">HUELLA DIGITAL <span class="mq-d">◆</span></span>
+    <span class="mq-i">COCHABAMBA BOLIVIA <span class="mq-d">◆</span></span>
+  </div>
+</div>
+
+<!-- Features -->
+<section id="features">
+  <div class="sec-tag">CARACTERÍSTICAS</div>
+  <h2 class="sec-h">Todo lo que<br>necesitas</h2>
+  <p class="sec-p">Diseñada para el transporte real de Cochabamba, sin complicaciones.</p>
+  <div class="feat-grid">
+    <div class="fc reveal">
+      <div class="fc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      </div>
+      <div class="fc-title">Registro con OCR</div>
+      <div class="fc-desc">Escanea tu CI boliviano. El sistema lee tus datos automáticamente usando visión artificial y verifica que el documento sea auténtico.</div>
+    </div>
+    <div class="fc reveal">
+      <div class="fc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="fc-title">Huella digital</div>
+      <div class="fc-desc">Accede a tu cuenta con tu huella dactilar. Rápido, seguro, sin escribir tu PIN cada vez.</div>
+    </div>
+    <div class="fc reveal">
+      <div class="fc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="fc-title">Pago instantáneo</div>
+      <div class="fc-desc">Escanea el QR del conductor y el saldo se descuenta en segundos. Sin efectivo, sin vuelto.</div>
+    </div>
+    <div class="fc reveal">
+      <div class="fc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      </div>
+      <div class="fc-title">Mapa en tiempo real</div>
+      <div class="fc-desc">Visualiza la ubicación GPS de los trufis en movimiento con rutas trazadas. Planifica antes de salir.</div>
+    </div>
+    <div class="fc reveal">
+      <div class="fc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="fc-title">Paga por tu grupo</div>
+      <div class="fc-desc">Hasta 3 acompañantes en un solo escaneo. El sistema calcula el total automáticamente.</div>
+    </div>
+    <div class="fc reveal">
+      <div class="fc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <div class="fc-title">Recarga flexible</div>
+      <div class="fc-desc">PayPal, tarjeta de crédito o transferencia bancaria. Saldo disponible de inmediato.</div>
+    </div>
+  </div>
+</section>
+
+<!-- QR Split -->
+<section>
+  <div class="qr-split">
+    <div class="reveal" style="display:flex;align-items:center;justify-content:center">
+      <div class="qr-box">
+        <div class="qr-c tl"></div>
+        <div class="qr-c tr"></div>
+        <div class="qr-c bl"></div>
+        <div class="qr-c br"></div>
+        <div class="qr-scan"></div>
+        <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
+          <rect x="8" y="8" width="44" height="44" rx="4" fill="none" stroke="rgba(168,237,203,0.6)" stroke-width="2.5"/>
+          <rect x="16" y="16" width="28" height="28" rx="2" fill="rgba(168,237,203,0.25)"/>
+          <rect x="108" y="8" width="44" height="44" rx="4" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
+          <rect x="116" y="16" width="28" height="28" rx="2" fill="rgba(255,255,255,0.15)"/>
+          <rect x="8" y="108" width="44" height="44" rx="4" fill="none" stroke="rgba(168,216,240,0.6)" stroke-width="2.5"/>
+          <rect x="16" y="116" width="28" height="28" rx="2" fill="rgba(168,216,240,0.2)"/>
+          <rect x="64" y="8" width="8" height="8" rx="1" fill="rgba(255,255,255,0.5)"/>
+          <rect x="76" y="8" width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)"/>
+          <rect x="88" y="8" width="8" height="8" rx="1" fill="rgba(255,255,255,0.5)"/>
+          <rect x="64" y="20" width="8" height="8" rx="1" fill="rgba(255,255,255,0.25)"/>
+          <rect x="76" y="20" width="8" height="8" rx="1" fill="rgba(255,255,255,0.4)"/>
+          <rect x="64" y="32" width="8" height="8" rx="1" fill="rgba(255,255,255,0.5)"/>
+          <rect x="64" y="64" width="8" height="8" rx="1" fill="rgba(255,255,255,0.45)"/>
+          <rect x="76" y="64" width="8" height="8" rx="1" fill="rgba(255,255,255,0.45)"/>
+          <rect x="88" y="64" width="8" height="8" rx="1" fill="rgba(255,255,255,0.2)"/>
+          <rect x="100" y="64" width="8" height="8" rx="1" fill="rgba(255,255,255,0.45)"/>
+          <rect x="64" y="76" width="8" height="8" rx="1" fill="rgba(255,255,255,0.2)"/>
+          <rect x="88" y="76" width="8" height="8" rx="1" fill="rgba(255,255,255,0.45)"/>
+          <rect x="64" y="88" width="8" height="8" rx="1" fill="rgba(255,255,255,0.45)"/>
+          <rect x="76" y="88" width="8" height="8" rx="1" fill="rgba(255,255,255,0.2)"/>
+          <rect x="100" y="88" width="8" height="8" rx="1" fill="rgba(255,255,255,0.45)"/>
+          <rect x="64" y="112" width="8" height="8" rx="1" fill="rgba(168,237,203,0.6)"/>
+          <rect x="76" y="112" width="8" height="8" rx="1" fill="rgba(255,255,255,0.35)"/>
+          <rect x="100" y="112" width="8" height="8" rx="1" fill="rgba(255,255,255,0.45)"/>
+          <circle cx="80" cy="80" r="12" fill="#0d0d0d" stroke="rgba(168,237,203,0.5)" stroke-width="1"/>
+          <circle cx="80" cy="80" r="4" fill="var(--mint)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="sec-tag">CÓDIGO QR</div>
+      <h2 class="sec-h">Un escaneo,<br>el viaje<br><span style="color:var(--mint)">pagado</span></h2>
+      <p class="sec-p" style="margin-top:14px">El conductor muestra su QR fijo. Tú lo escaneas y el sistema hace todo: descuenta saldo, aplica descuento y registra el viaje.</p>
+      <div class="check-list">
+        <div class="check-i"><div class="check-dot"></div><span class="check-txt">Descuento automático según tu tipo de usuario</span></div>
+        <div class="check-i"><div class="check-dot" style="background:var(--sky)"></div><span class="check-txt">Paga por ti y hasta 3 acompañantes</span></div>
+        <div class="check-i"><div class="check-dot" style="background:var(--lavender)"></div><span class="check-txt">Historial completo de todos tus viajes</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tarifas -->
+<section id="tarifas">
+  <div class="tar-inner">
+    <div class="sec-tag">TARIFAS</div>
+    <h2 class="sec-h">Precios justos<br>para todos</h2>
+    <p class="sec-p">Descuentos verificados con tu carnet. Sin tramitar papeles.</p>
+    <div class="tar-grid">
+      <div class="tc t-cream reveal">
+        <div class="tc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--cream)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="tc-tag">USUARIO GENERAL</div>
+        <div class="tc-price" style="color:var(--cream)">Bs 2.50</div>
+        <div class="tc-desc">Tarifa estándar para cualquier persona sin beneficio especial.</div>
+      </div>
+      <div class="tc t-mint reveal">
+        <div class="tc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <div class="tc-tag">ESTUDIANTE</div>
+        <div class="tc-price" style="color:var(--mint)">Bs 1.25</div>
+        <div class="tc-desc">Verifica tu carnet universitario al registrarte. UPDS, UMSS, UCB y más.</div>
+        <div class="tc-badge" style="background:rgba(168,237,203,.08);border:1px solid rgba(168,237,203,.25);color:var(--mint)">50% DE AHORRO</div>
+      </div>
+      <div class="tc t-sky reveal">
+        <div class="tc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/><path d="M12 12v9"/><path d="M9 15h6"/></svg>
+        </div>
+        <div class="tc-tag">ADULTO MAYOR</div>
+        <div class="tc-price" style="color:var(--sky)">Bs 1.75</div>
+        <div class="tc-desc">Verificación automática por fecha de nacimiento en el CI boliviano.</div>
+        <div class="tc-badge" style="background:rgba(168,216,240,.08);border:1px solid rgba(168,216,240,.25);color:var(--sky)">30% DE AHORRO</div>
+      </div>
+      <div class="tc t-lav reveal">
+        <div class="tc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <div class="tc-tag">DISCAPACIDAD</div>
+        <div class="tc-price" style="color:var(--lavender)">Bs 0.00</div>
+        <div class="tc-desc">Acceso completamente gratuito con certificado de discapacidad.</div>
+        <div class="tc-badge" style="background:rgba(197,184,240,.08);border:1px solid rgba(197,184,240,.25);color:var(--lavender)">100% GRATUITO</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cómo usar — pantallas reales de la app -->
+<section id="como">
+  <div class="screens-intro">
+    <div>
+      <div class="sec-tag">CÓMO USAR LA APP</div>
+      <h2 class="sec-h">La app por<br>dentro</h2>
+    </div>
+    <div>
+      <p class="sec-p" style="margin-top:20px">Cada pantalla fue diseñada para ser rápida e intuitiva. Así se ve TransitApp en tu teléfono.</p>
+    </div>
+  </div>
+
+  <!-- 4 pantallas de la app (mockups basados en screenshots reales) -->
+  <div class="screens-grid">
+
+    <!-- Home -->
+    <div class="screen-card reveal">
+      <div class="screen-phone">
+        <div class="screen-notch-sm"></div>
+        <div class="screen-inner">
+          <div class="mock-home">
+            <div class="mock-row">
+              <div>
+                <div style="font-family:'Space Mono',monospace;font-size:5px;color:#333;letter-spacing:1px">BUENAS NOCHES</div>
+                <div style="font-size:11px;font-weight:700;color:#f0f0f0">Juan</div>
+                <div style="display:inline-block;font-family:'Space Mono',monospace;font-size:4px;color:var(--mint);border:1px solid rgba(168,237,203,.3);padding:1px 5px;border-radius:5px;margin-top:2px">ESTUDIANTE</div>
+              </div>
+              <div class="mock-av">J</div>
+            </div>
+            <div class="mock-bal-box">
+              <div class="mock-bal-s">SALDO</div>
+              <div class="mock-bal-v">Bs. 806.25</div>
+            </div>
+            <div class="mock-map">
+              <div class="mock-map-lines"></div>
+              <div class="mock-dot"></div>
+              <div style="position:absolute;bottom:4px;left:6px;font-family:'Space Mono',monospace;font-size:4px;color:rgba(168,237,203,.4)">VER TRUFIS EN TIEMPO REAL</div>
+            </div>
+            <div class="mock-actions">
+              <div class="mock-act"><div class="mock-act-i" style="background:rgba(168,237,203,.15)"></div><div class="mock-act-l">PAGAR</div></div>
+              <div class="mock-act"><div class="mock-act-i" style="background:rgba(168,216,240,.15)"></div><div class="mock-act-l">RECARGAR</div></div>
+              <div class="mock-act"><div class="mock-act-i" style="background:rgba(197,184,240,.15)"></div><div class="mock-act-l">TRUFIS</div></div>
+              <div class="mock-act"><div class="mock-act-i" style="background:rgba(240,168,96,.15)"></div><div class="mock-act-l">VIAJES</div></div>
+              <div class="mock-act"><div class="mock-act-i"></div><div class="mock-act-l">AJUSTES</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">INICIO</div>
+      <div class="screen-num">PASAJERO</div>
+    </div>
+
+    <!-- Pagar QR -->
+    <div class="screen-card reveal">
+      <div class="screen-phone">
+        <div class="screen-notch-sm"></div>
+        <div class="screen-inner">
+          <div class="mock-qr">
+            <div style="font-family:'Space Mono',monospace;font-size:6px;letter-spacing:1.5px;color:#444;margin-top:4px">PAGAR VIAJE</div>
+            <div style="background:#0e0e0e;border:1px solid #1a1a1a;border-radius:8px;padding:8px;width:100%;display:flex;align-items:center;gap:6px">
+              <div style="width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--mint),var(--sky));font-size:8px;font-weight:700;color:#000;display:flex;align-items:center;justify-content:center;flex-shrink:0">J</div>
+              <div>
+                <div style="font-size:8px;font-weight:700;color:#f0f0f0">Juan Pérez</div>
+                <div style="font-family:'Space Mono',monospace;font-size:4px;color:var(--mint)">ESTUDIANTE · Bs 806.25</div>
+              </div>
+            </div>
+            <div style="background:#0e0e0e;border:1px solid #1a1a1a;border-radius:8px;padding:10px;width:100%">
+              <div style="font-family:'Space Mono',monospace;font-size:5px;color:#444;margin-bottom:6px;letter-spacing:1px">RESUMEN DE COBRO</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span style="font-size:7px;color:#888">Mi pasaje (estudiante)</span>
+                <span style="font-family:'Space Mono',monospace;font-size:8px;font-weight:700;color:var(--mint)">Bs 1.25</span>
+              </div>
+              <div style="border-top:1px solid #1a1a1a;margin-top:6px;padding-top:6px;display:flex;justify-content:space-between;align-items:center">
+                <span style="font-family:'Space Mono',monospace;font-size:6px;font-weight:700;color:#f0f0f0">TOTAL</span>
+                <span style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--mint)">Bs 1.25</span>
+              </div>
+            </div>
+            <div style="background:var(--mint);border-radius:8px;padding:8px 12px;width:100%;display:flex;align-items:center;justify-content:center;gap:6px">
+              <div style="width:10px;height:10px;background:rgba(0,0,0,.3);border-radius:2px"></div>
+              <span style="font-family:'Space Mono',monospace;font-size:6px;font-weight:700;color:#000;letter-spacing:1px">ESCANEAR QR DEL CONDUCTOR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">PAGAR VIAJE</div>
+      <div class="screen-num">ESCANEA AL CONDUCTOR</div>
+    </div>
+
+    <!-- Panel conductor QR -->
+    <div class="screen-card reveal">
+      <div class="screen-phone">
+        <div class="screen-notch-sm"></div>
+        <div class="screen-inner">
+          <div style="background:linear-gradient(180deg,#050505,#080808);height:100%;padding:10px;display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Space Mono',monospace;font-size:5px;letter-spacing:1.5px;color:#444;text-align:center;margin-top:4px">MI CÓDIGO QR</div>
+            <div style="font-family:'Space Mono',monospace;font-size:4px;color:#333;text-align:center">Los pasajeros escanean este QR para pagar</div>
+            <div style="background:#fff;border-radius:10px;padding:10px;margin:2px auto;width:fit-content">
+              <svg width="80" height="80" viewBox="0 0 160 160" fill="none">
+                <rect x="8" y="8" width="44" height="44" rx="4" fill="none" stroke="#000" stroke-width="4"/>
+                <rect x="16" y="16" width="28" height="28" rx="2" fill="#000"/>
+                <rect x="108" y="8" width="44" height="44" rx="4" fill="none" stroke="#000" stroke-width="4"/>
+                <rect x="116" y="16" width="28" height="28" rx="2" fill="#000"/>
+                <rect x="8" y="108" width="44" height="44" rx="4" fill="none" stroke="#000" stroke-width="4"/>
+                <rect x="16" y="116" width="28" height="28" rx="2" fill="#000"/>
+                <rect x="64" y="8" width="8" height="8" rx="1" fill="#000"/>
+                <rect x="76" y="8" width="8" height="8" rx="1" fill="#fff"/>
+                <rect x="88" y="8" width="8" height="8" rx="1" fill="#000"/>
+                <rect x="64" y="20" width="8" height="8" rx="1" fill="#fff"/>
+                <rect x="76" y="20" width="8" height="8" rx="1" fill="#000"/>
+                <rect x="64" y="32" width="8" height="8" rx="1" fill="#000"/>
+                <rect x="76" y="32" width="8" height="8" rx="1" fill="#fff"/>
+                <rect x="64" y="64" width="8" height="8" rx="1" fill="#000"/>
+                <rect x="88" y="64" width="8" height="8" rx="1" fill="#fff"/>
+                <rect x="100" y="76" width="8" height="8" rx="1" fill="#000"/>
+                <rect x="76" y="88" width="8" height="8" rx="1" fill="#fff"/>
+                <rect x="88" y="88" width="8" height="8" rx="1" fill="#000"/>
+                <rect x="64" y="100" width="8" height="8" rx="1" fill="#000"/>
+                <rect x="76" y="112" width="8" height="8" rx="1" fill="#fff"/>
+                <rect x="88" y="124" width="8" height="8" rx="1" fill="#000"/>
+                <rect x="100" y="136" width="8" height="8" rx="1" fill="#fff"/>
+              </svg>
+            </div>
+            <div style="background:rgba(168,237,203,.1);border:1px solid rgba(168,237,203,.25);border-radius:8px;padding:3px 8px;font-family:'Space Mono',monospace;font-size:5px;color:var(--mint);letter-spacing:1px;text-align:center;align-self:center">CARLOS MAMANI</div>
+            <div style="font-family:'Space Mono',monospace;font-size:4.5px;color:#333;letter-spacing:.5px;margin-top:2px">TARIFAS QUE COBRARÁS</div>
+            <div style="display:flex;flex-direction:column;gap:2px">
+              <div style="display:flex;justify-content:space-between"><span style="font-size:6px;color:#888">General</span><span style="font-family:'Space Mono',monospace;font-size:6px;font-weight:700;color:#f0f0f0">Bs 2.50</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="font-size:6px;color:#888">Estudiante</span><span style="font-family:'Space Mono',monospace;font-size:6px;font-weight:700;color:var(--lavender)">Bs 1.25</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">QR CONDUCTOR</div>
+      <div class="screen-num">CÓDIGO PERMANENTE</div>
+    </div>
+
+    <!-- Mapa trufis -->
+    <div class="screen-card reveal">
+      <div class="screen-phone">
+        <div class="screen-notch-sm"></div>
+        <div class="screen-inner">
+          <div class="mock-map-full">
+            <div class="mock-map-bg"></div>
+            <!-- Calles simuladas -->
+            <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.15" viewBox="0 0 160 270">
+              <line x1="0" y1="80" x2="160" y2="100" stroke="rgba(168,237,203,.6)" stroke-width="1.5"/>
+              <line x1="0" y1="140" x2="160" y2="155" stroke="rgba(168,237,203,.4)" stroke-width="1"/>
+              <line x1="40" y1="0" x2="50" y2="270" stroke="rgba(168,237,203,.3)" stroke-width="1"/>
+              <line x1="100" y1="0" x2="110" y2="270" stroke="rgba(168,237,203,.3)" stroke-width="1"/>
+              <!-- Ruta del trufi -->
+              <path d="M 10 90 Q 50 85 80 95 Q 110 105 150 100" stroke="var(--orange)" stroke-width="2.5" fill="none" stroke-dasharray="4 2" opacity=".8"/>
+            </svg>
+            <div class="mock-bus">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 4v4h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div class="mock-user"></div>
+            <div class="mock-map-info">
+              <div class="mock-map-txt">1 TRUFI ACTIVO · EN VIVO</div>
+              <div style="font-family:'Space Mono',monospace;font-size:4px;color:#444;margin-top:1px">Línea 101 · Terminal → Quillacollo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">TRUFIS EN VIVO</div>
+      <div class="screen-num">TIEMPO REAL</div>
+    </div>
+
+  </div>
+
+  <!-- Pasos -->
+  <div style="margin-top:100px">
+    <div class="sec-tag">PASO A PASO</div>
+    <h2 class="sec-h">Empieza en<br>4 pasos</h2>
+    <div class="steps-grid">
+      <div class="step reveal">
+        <div class="step-n">01</div>
+        <div class="step-title">Descarga la app</div>
+        <div class="step-desc">Instala el APK en tu Android. Compatible con todos los celulares modernos con Android 6.0+.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-n">02</div>
+        <div class="step-title">Regístrate</div>
+        <div class="step-desc">Escanea tu CI con la cámara. La inteligencia artificial lee tus datos automáticamente.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-n">03</div>
+        <div class="step-title">Recarga saldo</div>
+        <div class="step-desc">PayPal, tarjeta o transferencia. El saldo queda listo de inmediato en tu cuenta.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-n">04</div>
+        <div class="step-title">Sube al trufi</div>
+        <div class="step-desc">Escanea el QR del conductor y viaja. Tu descuento se aplica automáticamente.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Download -->
+<section id="dl">
+  <div class="dl-glow"></div>
+  <div class="dl-inner">
+    <div class="sec-tag">DISPONIBLE AHORA</div>
+    <h2 class="dl-h">Descarga<br><em>gratis</em></h2>
+    <p class="dl-p">TransitApp es completamente gratuita. Solo necesitas Android 6.0 o superior.</p>
+    <a href="TransitApp.apk" class="dl-btn" download>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      DESCARGAR APK — ANDROID
+    </a>
+    <div class="dl-meta">arm64-v8a · ~25MB · Android 6.0+ · <a href="#">Instrucciones de instalación</a></div>
+    <div class="stats-bar">
+      <div class="reveal"><div class="stat-n" style="color:var(--mint)">4</div><div class="stat-l">TIPOS DE USUARIO</div></div>
+      <div class="reveal"><div class="stat-n" style="color:var(--sky)">50%</div><div class="stat-l">AHORRO ESTUDIANTES</div></div>
+      <div class="reveal"><div class="stat-n" style="color:var(--lavender)">0s</div><div class="stat-l">ESPERA PARA PAGAR</div></div>
+      <div class="reveal"><div class="stat-n" style="color:var(--cream)">Bs 0</div><div class="stat-l">COSTO DE LA APP</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="f-copy">© 2025 TransitApp · Cochabamba, Bolivia · UPDS</span>
+  <div class="f-links">
+    <a href="#features">Características</a>
+    <a href="#tarifas">Tarifas</a>
+    <a href="#como">Cómo funciona</a>
+    <a href="TransitApp.apk" download>Descargar</a>
+  </div>
+</footer>
+
+<!-- Floating Action Buttons -->
+<div class="fab-group">
+  <button class="fab" id="btn-theme" aria-label="Cambiar tema">
+    <span class="fab-tip">CAMBIAR FONDO</span>
+    <svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a7a45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+  <button class="fab" id="btn-authors" aria-label="Creadores">
+    <span class="fab-tip">CREADORES</span>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  </button>
+</div>
+
+<!-- Authors Modal -->
+<div class="authors-overlay" id="authors-overlay">
+  <div class="authors-modal">
+    <button class="authors-close" id="authors-close">✕</button>
+    <div class="authors-tag">EQUIPO DE DESARROLLO</div>
+    <div class="authors-title">Creadores de<br>TransitApp</div>
+    <div class="authors-scroll">
+      <div class="authors-list">
+
+        <!-- 1 José Luis -->
+        <div class="author-card">
+          <div class="author-avatar" style="background:linear-gradient(135deg,var(--mint),var(--sky))">JL</div>
+          <div class="author-info">
+            <div class="author-name">José Luis Maraza Ignacio</div>
+            <div class="author-role">LEAD DEV · MOBILE FULL-STACK</div>
+            <div class="author-chips">
+              <span class="author-chip">Flutter/Dart</span>
+              <span class="author-chip">Supabase</span>
+              <span class="author-chip">Auth QR</span>
+              <span class="author-chip">Admin Panel React</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Amet Levit -->
+        <div class="author-card">
+          <div class="author-avatar" style="background:linear-gradient(135deg,var(--sky),var(--lavender))">AL</div>
+          <div class="author-info">
+            <div class="author-name">Amet Levit Zambrana Chambi</div>
+            <div class="author-role">MOBILE DEV · UI/UX</div>
+            <div class="author-chips">
+              <span class="author-chip">Flutter UI</span>
+              <span class="author-chip">Pantalla Pasajero</span>
+              <span class="author-chip">Recarga de Saldo</span>
+              <span class="author-chip">Historial de Viajes</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Victor -->
+        <div class="author-card">
+          <div class="author-avatar" style="background:linear-gradient(135deg,var(--lavender),#e0a0f0)">VA</div>
+          <div class="author-info">
+            <div class="author-name">Victor Alejandro García Jaldin</div>
+            <div class="author-role">BACKEND · BASE DE DATOS</div>
+            <div class="author-chips">
+              <span class="author-chip">Supabase DB</span>
+              <span class="author-chip">Políticas RLS</span>
+              <span class="author-chip">Tarifas Diferenciadas</span>
+              <span class="author-chip">Reportes</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Wilbert -->
+        <div class="author-card">
+          <div class="author-avatar" style="background:linear-gradient(135deg,var(--orange),var(--cream))">WO</div>
+          <div class="author-info">
+            <div class="author-name">Wilbert Oscar Mita Gómez</div>
+            <div class="author-role">MOBILE DEV · CONDUCTOR</div>
+            <div class="author-chips">
+              <span class="author-chip">Panel Conductor</span>
+              <span class="author-chip">QR Escáner</span>
+              <span class="author-chip">Google Maps</span>
+              <span class="author-chip">Tracking en Vivo</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="authors-footer">
+        <div style="margin-bottom:6px;font-size:9px;letter-spacing:2px;color:var(--mint)">UPDS · ING. SISTEMAS</div>
+        Aplicaciones Móviles · Cochabamba, Bolivia · 2025<br>
+        <span style="font-size:7px;opacity:.6;letter-spacing:1px">Ing. José Mita — Docente</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.transform=`translate(${mx-4}px,${my-4}px)`;});
+(function loop(){rx+=(mx-rx-16)*.12;ry+=(my-ry-16)*.12;ring.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(loop);})();
+
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>50));
+
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+  const t=document.querySelector(a.getAttribute('href'));
+  if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+}));
+
+window.addEventListener('scroll',()=>{
+  const g=document.querySelector('.hero-grid');
+  if(g)g.style.transform=`translate(${scrollY*.08}px,${scrollY*.18}px)`;
+});
+
+// 3D phone mouse tracking
+const phoneScene=document.querySelector('.phone-scene');
+if(phoneScene){
+  document.addEventListener('mousemove',e=>{
+    const rect=phoneScene.getBoundingClientRect();
+    const cx=rect.left+rect.width/2;
+    const cy=rect.top+rect.height/2;
+    const dx=(e.clientX-cx)/window.innerWidth;
+    const dy=(e.clientY-cy)/window.innerHeight;
+    const phone=phoneScene.querySelector('.phone-3d');
+    if(phone){
+      phone.style.transform=`rotateY(${-18+dx*12}deg) rotateX(${6-dy*8}deg)`;
+    }
+  });
+  document.addEventListener('mouseleave',()=>{
+    const phone=phoneScene.querySelector('.phone-3d');
+    if(phone)phone.style.transform='rotateY(-18deg) rotateX(6deg)';
+  });
+}
+// ── Theme toggle ──
+const btnTheme=document.getElementById("btn-theme");
+const iconMoon=document.getElementById("icon-moon");
+const iconSun=document.getElementById("icon-sun");
+btnTheme.addEventListener("click",()=>{
+  document.body.classList.toggle("light");
+  const isLight=document.body.classList.contains("light");
+  iconMoon.style.display=isLight?"none":"block";
+  iconSun.style.display=isLight?"block":"none";
+});
+
+// ── Authors modal ──
+const overlay=document.getElementById("authors-overlay");
+document.getElementById("btn-authors").addEventListener("click",()=>overlay.classList.add("open"));
+document.getElementById("authors-close").addEventListener("click",()=>overlay.classList.remove("open"));
+overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.classList.remove("open");});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")overlay.classList.remove("open");});
+</script>
+</body>
+</html>
